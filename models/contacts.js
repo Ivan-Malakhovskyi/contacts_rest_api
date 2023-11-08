@@ -1,19 +1,34 @@
 // const fs = require('fs/promises')
+import fs from "fs/promises";
+import path from "path";
 
-const listContacts = async () => {}
+const contactPath = path.resolve("models", "contacts.json");
 
-const getContactById = async (contactId) => {}
+// const updateContacts = (contact) => {
+//   fs.writeFile(contactPath, JSON.stringify(contact, null, 2));
+// };
 
-const removeContact = async (contactId) => {}
+export const listContacts = async () => {
+  try {
+    const contacts = await fs.readFile(contactPath);
+    return JSON.parse(contacts);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-const addContact = async (body) => {}
+export const getContactById = async (contactId) => {};
 
-const updateContact = async (contactId, body) => {}
+export const removeContact = async (contactId) => {};
 
-module.exports = {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-}
+export const addContact = async (body) => {};
+
+export const updateContact = async (contactId, body) => {};
+
+// module.exports = {
+//   listContacts,
+//   getContactById,
+//   removeContact,
+//   addContact,
+//   updateContact,
+// }
