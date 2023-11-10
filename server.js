@@ -1,16 +1,14 @@
-// const app = require("./app");
-
 import { app } from "./app.js";
 
-// app.listen(3000, () =>
-//   console.log("Server running. Use our API on port: 3000")
-// );
+app.listen(3000, () =>
+  console.log("Server running. Use our API on port: 3000")
+);
 
 //* ==============================================
 
-app.use((req, res, next) => {
-  next();
-}); //* middleware для кожного запиту
+// app.use((req, res, next) => {
+//   console.log("object");
+// }); //* middleware для кожного запиту
 
 //! Використання middleware
 // ? CORS
@@ -25,6 +23,6 @@ app.use((req, res, next) => {
 //   res.send("This is contacts Page");
 // });
 
-app.listen(3000, () =>
-  console.log("Server running. Use our API on port: 3000")
-);
+// app.listen(3000, () =>
+//   console.log("Server running. Use our API on port: 3000")
+// );
