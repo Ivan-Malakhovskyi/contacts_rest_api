@@ -6,7 +6,7 @@ export const contactAddSchema = Joi.object({
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .required(),
   phone: Joi.string()
-    .regex(/^[0-9]{10}$/)
+    .regex(/^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/)
     .messages({ "string.pattern.base": `Phone number must have 10 digits.` })
     .required(),
 });
