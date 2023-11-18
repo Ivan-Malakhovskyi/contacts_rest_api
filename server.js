@@ -48,7 +48,7 @@ const contactsSchema = new Schema(
 
 //zK8igxDpYBdOCA2j
 
-const { DB_HOST } = process.env;
+const { DB_HOST } = process.env; //*Об'єкт procces.env - змінні оточення
 
 mongoose
   .connect(DB_HOST)
