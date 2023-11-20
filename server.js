@@ -1,28 +1,17 @@
 import { app } from "./app.js";
+import mongoose from "mongoose";
 
-app.listen(3000, () =>
-  console.log("Server running. Use our API on port: 3000")
-);
+const { DB_HOST, PORT = 3000 } = process.env; //*Об'єкт procces.env - змінні оточення
 
-//* ==============================================
-
-// app.use((req, res, next) => {
-//   console.log("object");
-// }); //* middleware для кожного запиту
-
-//! Використання middleware
-// ? CORS
-
-// app.get("/", (req, res) => {
-//   res.send("<h1>This is Main PAge</h1>");
-// });
-
-// app.get("/contacts", (req, res) => {
-//   console.log(req.url);
-//   console.log(req.method);
-//   res.send("This is contacts Page");
-// });
-
-// app.listen(3000, () =>
-//   console.log("Server running. Use our API on port: 3000")
-// );
+mongoose
+  .connect(DB_HOST)
+  .then(() => {
+    console.log("✔ Success conecting");
+    app.listen(PORT, () =>
+      console.log(`Server running. Use our API on port: ${PORT}`)
+    );
+  })
+  .catch((err) => {
+    console.log("❌ ooops...", err.message);
+    process.exit(1); //*закриття всіх запущених процесів
+  });

@@ -2,6 +2,9 @@ import express from "express";
 import logger from "morgan";
 import cors from "cors";
 import contactsRouter from "./routes/api/contacts-router.js";
+import "dotenv/config"; //! скорочений запис
+
+// dotenv.config(); //* Зчитує файл .env і додає ключ-значення в procces.env
 
 export const app = express(); //* web-server
 

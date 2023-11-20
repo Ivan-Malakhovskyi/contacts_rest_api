@@ -1,15 +1,15 @@
-import * as contactsService from "../models/contacts.js";
 import { HttpError } from "../helpers/index.js";
+import Contact from "../models/Contact.js";
 import { ctrlContactWrapper } from "../decorators/index.js";
 
 const getAll = async (req, res, next) => {
-  const result = await contactsService.listContacts();
+  const result = await Contact.find({}, { createdAt: 0, updatedAt: 0 });
   res.json(result);
 };
 
 const getById = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await contactsService.getContactById(contactId);
+  const result = await Contact.findById(contactId); //* return object || null
   if (!result) {
     throw HttpError(
       404,
@@ -20,13 +20,16 @@ const getById = async (req, res, next) => {
 };
 
 const add = async (req, res, next) => {
-  const result = await contactsService.addContact(req.body);
+  const result = await Contact.create(req.body);
   res.status(201).json(result);
 };
 
 const updateById = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await contactsService.updateContactById(contactId, req.body);
+  const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   if (!result) {
     throw HttpError(
@@ -40,7 +43,7 @@ const updateById = async (req, res, next) => {
 
 const deleteById = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await contactsService.removeContact(contactId);
+  const result = await Contact.findByIdAndDelete(contactId);
 
   if (!result) {
     throw HttpError(
