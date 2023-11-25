@@ -3,6 +3,8 @@ import logger from "morgan";
 import cors from "cors";
 import contactsRouter from "./routes/api/contacts-router.js";
 import "dotenv/config"; //! скорочений запис
+import authRouter from "./routes/api/auth-contacts-router.js";
+// import jsonwebtoken from "jsonwebtoken";
 
 // dotenv.config(); //* Зчитує файл .env і додає ключ-значення в procces.env
 
@@ -15,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/contacts", contactsRouter); //* middleware
+app.use("/users", authRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

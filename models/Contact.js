@@ -40,8 +40,6 @@ contactSchema.post("save", handleSaveErr); //* хук
 
 contactSchema.post("findOneAndUpdate ", handleSaveErr); //* Щоб при невдалому оновленні не прилітав 500 статус
 
-const Contact = model("contact", contactSchema);
-
 export const contactAddSchema = Joi.object({
   name: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string()
@@ -63,6 +61,8 @@ export const contactUpdateSchema = Joi.object({
 export const contactFavoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
 });
+
+const Contact = model("contact", contactSchema);
 
 export default Contact;
 
