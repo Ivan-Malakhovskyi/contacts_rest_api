@@ -2,10 +2,9 @@ import { Schema, model } from "mongoose";
 import { handleSaveErr, handlePreUpdate } from "./hooks.js";
 import Joi from "joi";
 
-const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+// const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
-const emailRegex =
-  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = new Schema(
   {
@@ -13,7 +12,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Set password for user"],
       minLength: 6,
-      match: passwordRegex,
+      // match: passwordRegex,
     },
 
     email: {
@@ -29,7 +28,7 @@ const userSchema = new Schema(
     },
     token: String,
   },
-  { versionKey: false, timeseries: true }
+  { versionKey: false, timestamps: true }
 );
 
 userSchema.pre("findOneAndUpdate", handlePreUpdate);
@@ -38,13 +37,25 @@ userSchema.post("findOneAndUpdate", handleSaveErr);
 
 export const userSignupSchema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30),
-  email: Joi.string().pattern(emailRegex).required(),
-  password: Joi.string().pattern(passwordRegex).required(),
+  email: Joi.string()
+    .pattern(emailRegex)
+    .required()
+    .messages({ "any.required": `"email" is a required field` }),
+  password: Joi.string()
+    .required()
+    .messages({ "any.required": `"password" is a required field` }),
+  //.pattern(passwordRegex)
 });
 
 export const useSigninSchema = Joi.object({
-  email: Joi.string().pattern(emailRegex).required(),
-  password: Joi.string().pattern(passwordRegex).required(),
+  email: Joi.string()
+    .pattern(emailRegex)
+    .required()
+    .messages({ "any.required": `"email" is a required field` }),
+  password: Joi.string()
+    .required()
+    .messages({ "any.required": `"password" is a required field` }),
+  //.pattern(passwordRegex)
 });
 
 const User = model("user", userSchema);
