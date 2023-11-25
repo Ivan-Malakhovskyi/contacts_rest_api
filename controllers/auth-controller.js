@@ -7,21 +7,6 @@ import "dotenv/config";
 
 const { JWT_SECRET_KEY } = process.env;
 
-// try {
-//   const errToken =
-//     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjIxNTlkNGM2OTlmNjY4MjNiNDU4YyIsImlhdCI6MTcwMDkyOTkwMCwiZXhwIjoxNzAxMDAxOTAwfQ.lw-PwufjlSxbqn00TpS_SoXlusr42ohHvcj3It37zfM";
-
-//   //* Перевіряє чи дійсно токен був зашифрований JWT_SECRET_KEY цим рядком(Якщо НІ,то повертає Invalid signature)
-//   //*Якщо 1 ОК, то далі перевіряє чи час життя не сплинув (Якщо минув -> JWT EXPIRES)
-//   //*Якщо все ОК -> payload
-
-//   const { id } = jsonwebtoken.verify(token, JWT_SECRET_KEY);
-
-//   console.log({ id });
-// } catch (error) {
-//   console.log(error.message);
-// }
-
 const signup = async (req, res) => {
   const { email, password } = req.body;
 
@@ -45,20 +30,20 @@ const signup = async (req, res) => {
 const signin = async (req, res) => {
   const { email, password } = req.body;
 
-  const findUser = await User.findOne({ email });
+  const user = await User.findOne({ email });
 
-  if (!findUser) {
+  if (!user) {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  const comparePassword = await bcrypt.compare(password, findUser.password);
+  const comparePassword = await bcrypt.compare(password, user.password);
 
   if (!comparePassword) {
     throw HttpError(401, "Email or password is wrong");
   }
 
   const payload = {
-    id: findUser._id,
+    id: user._id,
   };
 
   const token = jsonwebtoken.sign(payload, JWT_SECRET_KEY, {
@@ -69,7 +54,7 @@ const signin = async (req, res) => {
     token,
     user: {
       email,
-      subscription: findUser.subscription,
+      subscription: user.subscription,
     },
   });
 };

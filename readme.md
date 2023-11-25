@@ -33,3 +33,33 @@
 // Визначення маршруту має такий вигляд
 
 app.METHOD(PATH, HANDLER);
+
+// try {
+// const errToken =
+// "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjIxNTlkNGM2OTlmNjY4MjNiNDU4YyIsImlhdCI6MTcwMDkyOTkwMCwiZXhwIjoxNzAxMDAxOTAwfQ.lw-PwufjlSxbqn00TpS_SoXlusr42ohHvcj3It37zfM";
+
+// //* Перевіряє чи дійсно токен був зашифрований JWT_SECRET_KEY цим рядком(Якщо НІ,то повертає Invalid signature)
+// //*Якщо 1 ОК, то далі перевіряє чи час життя не сплинув (Якщо минув -> JWT EXPIRES)
+// //\*Якщо все ОК -> payload
+
+// const { id } = jsonwebtoken.verify(token, JWT_SECRET_KEY);
+
+// console.log({ id });
+// } catch (error) {
+// console.log(error.message);
+// }
+
+//\* authentication.js
+1 Варіант
+const { JWT_SECRET_KEY } = process.env;
+
+const authentication = (req, res, next) => {
+const { authorization } = req.headers; //\*в Node.js heades з малої
+const [bearer, token] = authorization.split(" ");
+
+if (bearer !== "Bearer") {
+return next(HttpError(401)); //\*return, бо next не перериває виконання ф-Ї
+}
+
+console.log(authentication);
+};

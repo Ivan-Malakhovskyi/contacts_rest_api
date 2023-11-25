@@ -2,8 +2,6 @@ import { Schema, model } from "mongoose";
 import { handleSaveErr, handlePreUpdate } from "./hooks.js";
 import Joi from "joi";
 
-// const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = new Schema(
@@ -12,7 +10,6 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Set password for user"],
       minLength: 6,
-      // match: passwordRegex,
     },
 
     email: {
@@ -25,6 +22,10 @@ const userSchema = new Schema(
       type: String,
       enum: ["starter", "pro", "business"],
       default: "starter",
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
     },
     token: String,
   },
