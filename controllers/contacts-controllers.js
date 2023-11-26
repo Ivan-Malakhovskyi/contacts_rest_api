@@ -3,13 +3,32 @@ import Contact from "../models/Contact.js";
 import { ctrlContactWrapper } from "../decorators/index.js";
 
 const getAll = async (req, res, next) => {
-  const result = await Contact.find({}, { createdAt: 0, updatedAt: 0 });
-  res.json(result);
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 20, ...filterQueryParams } = req.query;
+
+  const skip = (page - 1) * limit;
+
+  const count = await Contact.countDocuments({ owner });
+
+  const filterQuery = { owner, ...filterQueryParams };
+
+  const result = await Contact.find(filterQuery, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  }).populate("owner", "email subscription");
+
+  //*Будуть отримані ті фільми, якщо цей користувач їх додав
+  res.json({
+    result,
+    total: count,
+    per_page: limit,
+  });
 };
 
 const getById = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await Contact.findById(contactId); //* return object || null
+  const { _id: owner } = req.user;
+  const result = await Contact.findOne({ _id: contactId, owner });
   if (!result) {
     throw HttpError(
       404,
@@ -20,16 +39,18 @@ const getById = async (req, res, next) => {
 };
 
 const add = async (req, res, next) => {
-  const result = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+  const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
 
 const updateById = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await Contact.findByIdAndUpdate(contactId, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const { _id: owner } = req.user;
+  const result = await Contact.findOneAndUpdate(
+    { _id: contactId, owner },
+    req.body
+  );
 
   if (!result) {
     throw HttpError(
@@ -43,7 +64,8 @@ const updateById = async (req, res, next) => {
 
 const deleteById = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await Contact.findByIdAndDelete(contactId);
+  const { _id: owner } = req.user;
+  const result = await Contact.findOneAndDelete({ _id: contactId, owner });
 
   if (!result) {
     throw HttpError(
