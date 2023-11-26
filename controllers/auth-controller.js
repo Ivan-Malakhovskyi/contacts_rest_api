@@ -50,6 +50,8 @@ const signin = async (req, res) => {
     expiresIn: "20h",
   });
 
+  await User.findByIdAndUpdate(user._id, { token });
+
   res.status(200).json({
     token,
     user: {
@@ -59,7 +61,46 @@ const signin = async (req, res) => {
   });
 };
 
+const current = async (req, res) => {
+  const { email, subscription } = req.user;
+
+  res.status(200).json({
+    email,
+    subscription,
+  });
+};
+
+const signout = async (req, res) => {
+  const { _id } = req.user;
+
+  await User.findByIdAndUpdate(_id, { token: "" });
+
+  res.status(204).json();
+};
+
+const updateUserSubscr = async (req, res, next) => {
+  const { subscription } = req.body;
+  const { token } = req.user;
+
+  const { id } = jsonwebtoken.verify(token, JWT_SECRET_KEY);
+
+  const updateUser = await User.findByIdAndUpdate(
+    id,
+    { subscription },
+    { new: true, runValidators: true }
+  );
+
+  if (!updateUser) {
+    throw HttpError(404, "User not found");
+  }
+
+  res.status(200).json(updateUser);
+};
+
 export default {
   signup: ctrlContactWrapper(signup),
   signin: ctrlContactWrapper(signin),
+  current: ctrlContactWrapper(current),
+  signout: ctrlContactWrapper(signout),
+  subscription: ctrlContactWrapper(updateUserSubscr),
 };

@@ -11,7 +11,6 @@ const userSchema = new Schema(
       required: [true, "Set password for user"],
       minLength: 6,
     },
-
     email: {
       type: String,
       required: [true, "Set email for user"],
@@ -23,11 +22,9 @@ const userSchema = new Schema(
       enum: ["starter", "pro", "business"],
       default: "starter",
     },
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
+    token: {
+      type: String,
     },
-    token: String,
   },
   { versionKey: false, timestamps: true }
 );
@@ -48,7 +45,7 @@ export const userSignupSchema = Joi.object({
   //.pattern(passwordRegex)
 });
 
-export const useSigninSchema = Joi.object({
+export const userSigninSchema = Joi.object({
   email: Joi.string()
     .pattern(emailRegex)
     .required()
@@ -57,6 +54,12 @@ export const useSigninSchema = Joi.object({
     .required()
     .messages({ "any.required": `"password" is a required field` }),
   //.pattern(passwordRegex)
+});
+
+export const userUpdateSubcsription = Joi.object({
+  subscription: Joi.string()
+    .required()
+    .messages({ "any.required": `"subscription" is a required field` }),
 });
 
 const User = model("user", userSchema);

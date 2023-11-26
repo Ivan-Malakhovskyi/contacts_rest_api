@@ -21,7 +21,7 @@ const authentication = async (req, res, next) => {
   try {
     const { id } = jsonwebtoken.verify(token, JWT_SECRET_KEY);
     const user = await User.findById(id);
-    if (!user) {
+    if (!user || !user.token || user.token !== token) {
       throw HttpError(401, "Not authorized");
     }
     req.user = user;

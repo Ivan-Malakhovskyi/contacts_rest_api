@@ -26,9 +26,14 @@ const contactSchema = new Schema(
       unique: true,
       required: [true, " Phone is required"],
     },
+
     favorite: {
       type: Boolean,
       default: false,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
     },
   },
   { versionKey: false, timestamps: true } //*налаштування схеми
