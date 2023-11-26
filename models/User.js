@@ -42,7 +42,6 @@ export const userSignupSchema = Joi.object({
   password: Joi.string()
     .required()
     .messages({ "any.required": `"password" is a required field` }),
-  //.pattern(passwordRegex)
 });
 
 export const userSigninSchema = Joi.object({
@@ -53,7 +52,6 @@ export const userSigninSchema = Joi.object({
   password: Joi.string()
     .required()
     .messages({ "any.required": `"password" is a required field` }),
-  //.pattern(passwordRegex)
 });
 
 export const userUpdateSubcsription = Joi.object({
