@@ -24,12 +24,15 @@ const contactSchema = new Schema(
       max: [12, "Too long phone number"],
       match: phoneRegex, //* formats (123) 456-7890
       unique: true,
-      required: [true, " Phone is required"],
+      required: [true, "Phone is required"],
     },
-
     favorite: {
       type: Boolean,
       default: false,
+    },
+    avatar: {
+      type: String,
+      required: [true, "set avatar for contact"],
     },
     owner: {
       type: Schema.Types.ObjectId,
