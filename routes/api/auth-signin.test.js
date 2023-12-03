@@ -1,62 +1,64 @@
-// import mongoose from "mongoose";
-// import { app } from "../../app.js";
-// import supertest from "supertest";
-// import jwt from "jsonwebtoken";
-// import User from "../../models/User.js";
+import mongoose from "mongoose";
+import { app } from "../../app.js";
+import supertest from "supertest";
+import jwt from "jsonwebtoken";
+import User from "../../models/User.js";
+import bcrypt from "bcrypt";
 
-// const { DB_TEST_HOST, PORT = 3000, JWT_SECRET_KEY } = process.env;
+const { DB_TEST_HOST, JWT_SECRET_KEY } = process.env;
 
-// describe("test user/signin router", () => {
-//   let server = null;
+describe("test user/signin router", () => {
+  let server = null;
 
-//   beforeAll(async () => {
-//     await mongoose.connect(DB_TEST_HOST);
-//     server = app.listen(PORT);
-//   });
+  beforeAll(async () => {
+    await mongoose.connect(DB_TEST_HOST);
+    server = app.listen(3001);
+  });
 
-//   afterAll(async () => {
-//     await mongoose.connection.close();
-//     server.close();
-//   });
+  afterAll(async () => {
+    await mongoose.connection.close();
+    server.close();
+  });
 
-//   test("test user/signin with true data", async () => {
-//     const signinData = {
-//       email: "testingsign@gmail.com",
-//       subscription: "starter",
-//     };
+  test("test user/signin with true data", async () => {
+    const signinData = {
+      email: "testingsign@gmail.com",
+      password: "1243747",
+    };
 
-//     const { body, statusCode } = await supertest(app)
-//       .post("/users/signin")
-//       .send(signinData);
+    const { body, statusCode } = await supertest(app)
+      .post("/users/signin")
+      .send(signinData);
 
-//     expect(statusCode).toBe(200);
+    expect(statusCode).toBe(200);
 
-//     const isUserInDB = await User.findOne({
-//       email: signinData.email,
-//     });
+    const isUserInDB = await User.findOne({
+      email: signinData.email,
+    });
 
-//     const comparePassword = await bcrypt.compare(password, isUserInDB.password);
+    // const comparePassword = await bcrypt.compare(
+    //   body.user.password,
+    //   isUserInDB.password
+    // );
 
-//     const payload = {
-//       id: isUserInDB._id,
-//     };
+    const payload = {
+      id: isUserInDB._id,
+    };
 
-//     const token = jwt.sign(payload, JWT_SECRET_KEY, {
-//       expiresIn: "20h",
-//     });
+    const token = jwt.sign(payload, JWT_SECRET_KEY, {
+      expiresIn: "20h",
+    });
 
-//     const isValid = await User.findByIdAndUpdate(isUserInDB._id, {
-//       token,
-//     });
+    await User.findByIdAndUpdate(isUserInDB._id, { token });
 
-//     expect(signinData.email).toBe(isUserInDB.email);
-//     expect(body.password).toBe(comparePassword);
-//     expect(signinData.token).toBe(isValid.token);
-//     expect(body.subscription).toBe(isUserInDB.subscription);
-//     expect(typeof signinData.email).toBe("string");
-//     expect(typeof signinData.subscription).toBe("string");
-//   });
-// });
+    expect(body.user.email).toBe(signinData.email);
+    expect(body.user.password).toBe(signinData.password);
+    expect(token).toBe(body.user.token);
+    expect(body.user.subscription).toBe("starter");
+    expect(typeof signinData.email).toBe("string");
+    expect(typeof body.user.subscription).toBe("string");
+  });
+});
 
 // //* відповідь повина мати статус-код 200
 // //* у відповіді повинен повертатися токен
