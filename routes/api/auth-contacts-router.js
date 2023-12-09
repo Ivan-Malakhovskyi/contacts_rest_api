@@ -10,6 +10,7 @@ import {
   userSignupSchema,
   userSigninSchema,
   userUpdateSubcsription,
+  repeadUserVerifySchema,
 } from "../../models/User.js";
 
 const authRouter = express.Router();
@@ -29,6 +30,15 @@ authRouter.post(
 );
 
 authRouter.get("/current", authentication, authController.current);
+
+authRouter.get("/verify/:verificationToken", authController.verifyEmail);
+
+authRouter.post(
+  "/verify",
+  isEmptyBody,
+  validateBodyRequest(repeadUserVerifySchema),
+  authController.repeadVerify
+);
 
 authRouter.post("/signout", authentication, authController.signout);
 
