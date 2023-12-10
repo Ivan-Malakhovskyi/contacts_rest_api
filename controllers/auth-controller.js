@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import { ctrlContactWrapper } from "../decorators/index.js";
-import { HttpError, sentEmail } from "../helpers/index.js";
+import { HttpError, sendEmail } from "../helpers/index.js";
 import { nanoid } from "nanoid";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
@@ -9,7 +9,6 @@ import path from "path";
 import fs from "fs/promises";
 import "dotenv/config";
 import jimp from "jimp";
-import sendEmail from "../helpers/sendEmail.js";
 
 const avatarsPath = path.resolve("public", "avatars");
 
