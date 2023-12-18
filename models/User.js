@@ -67,7 +67,7 @@ export const userSigninSchema = Joi.object({
     .messages({ "any.required": `"password" is a required field` }),
 });
 
-export const userUpdateSubcsription = Joi.object({
+export const userUpdateSubcsriptionSchema = Joi.object({
   subscription: Joi.string()
     .required()
     .messages({ "any.required": `"subscription" is a required field` }),

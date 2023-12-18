@@ -9,8 +9,8 @@ import { validateBodyRequest } from "../../decorators/index.js";
 import {
   userSignupSchema,
   userSigninSchema,
-  userUpdateSubcsription,
   repeadUserVerifySchema,
+  userUpdateSubcsriptionSchema,
 } from "../../models/User.js";
 
 const authRouter = express.Router();
@@ -46,7 +46,7 @@ authRouter.patch(
   "/",
   isEmptyBody,
   authentication,
-  validateBodyRequest(userUpdateSubcsription),
+  validateBodyRequest(userUpdateSubcsriptionSchema),
   authController.subscription
 );
 

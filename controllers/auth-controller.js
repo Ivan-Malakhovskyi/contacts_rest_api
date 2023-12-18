@@ -41,7 +41,7 @@ const signup = async (req, res) => {
     avatarURL,
   });
 
-  await sentEmail(verifyEnvelop(email, verificationToken));
+  await sendEmail(verifyEnvelop(email, verificationToken));
 
   res.status(201).json({
     user: {
