@@ -1,5 +1,5 @@
 {
-  "name": "node_js_rest_rest_api",
+  "name": "contacts_rest_api",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -41,7 +41,7 @@
     "nodemon": "2.0.15",
     "supertest": "^6.3.3"
   },
-  "repository": "https://github.com/Ivan-Malakhovskyi/node.js-hw-rest-API",
+  "repository": "https://github.com/Ivan-Malakhovskyi/contacts_rest_api",
   "author": "Ivan Malakhovskyi <ivanmalahovskij121@gmail.com>",
   "license": "MIT"
 }
