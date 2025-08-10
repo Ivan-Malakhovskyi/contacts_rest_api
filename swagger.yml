@@ -1,0 +1,50 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateContactRequest:
+      type: object
+      required: [name, email, phone, avatar]
+      properties:
+        name:
+          type: string
+          description: Contact's name
+        email:
+          type: string
+          format: email
+        phone:
+          type: number
+        avatar:
+          type: string
+          format: binary
+        favorite:
+          type: boolean
+          default: false
+
+    CreateContactResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          email:
+            type: string
+          phone:
+            type: string
+          favorite:
+            type: boolean
+          avatar:
+            type: string
+          owner:
+            type: string
+          _id:
+            type: string
+          createdAt:
+            type: string
+          updatedAt:
+            type: string

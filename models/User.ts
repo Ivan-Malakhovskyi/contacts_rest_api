@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { handleSaveErr, handlePreUpdate } from "./hooks.js";
+import { handleSaveErr, handlePreUpdate } from "./hooks.ts";
 import Joi from "joi";
 
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;

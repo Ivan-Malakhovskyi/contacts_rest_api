@@ -1,6 +1,3 @@
-import User from "../models/User.js";
-import { ctrlContactWrapper } from "../decorators/index.js";
-import { HttpError, sendEmail } from "../helpers/index.js";
 import { nanoid } from "nanoid";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
@@ -9,6 +6,10 @@ import path from "path";
 import fs from "fs/promises";
 import "dotenv/config";
 import jimp from "jimp";
+
+import User from "../models/User.ts";
+import { ctrlContactWrapper } from "../decorators/index.ts";
+import { HttpError, sendEmail } from "../helpers/index.ts";
 
 const avatarsPath = path.resolve("public", "avatars");
 
@@ -116,7 +117,7 @@ const signin = async (req, res) => {
     id: user._id,
   };
 
-  const token = jsonwebtoken.sign(payload, JWT_SECRET_KEY, {
+  const token = jsonwebtoken.sign(payload, JWT_SECRET_KEY!, {
     expiresIn: "20h",
   });
 
