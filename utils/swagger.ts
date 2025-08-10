@@ -9,7 +9,6 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
 const options = require("../swagger.json");
-console.log(options);
 
 const swaggerSpec = swaggerJSDoc(options);
 
@@ -27,46 +26,3 @@ function swaggerDocs(app: Express, port: string | 3000) {
 }
 
 export default swaggerDocs;
-
-// "items": {
-//           "type": "object",
-//           "properties": {
-//             "name": {
-//               "type": "string",
-//               "description": "Contact`s name"
-//             },
-//             "email": {
-//               "type": "string",
-//               "description": "Contact`s email"
-//             },
-//             "phone": {
-//               "type": "string",
-//               "description": "Contact`s phone"
-//             },
-//             "favorite": {
-//               "type": "boolean"
-//             },
-//             "avatar": {
-//               "type": "string",
-//               "description": "Contact`s avatar"
-//             },
-//             "owner": {
-//               "type": "string",
-//               "description": "Contact`s owner"
-//             },
-//             "_id": {
-//               "type": "string",
-//               "description": "Contact`s _id"
-//             },
-//             "createdAt": {
-//               "type": "string",
-//               "format": "date",
-//               "description": "createdAt"
-//             },
-//             "updatedAt": {
-//               "type": "string",
-//               "format": "date",
-//               "description": "updatedAt"
-//             }
-//           }
-//         }
