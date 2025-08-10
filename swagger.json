@@ -28,11 +28,11 @@
         "description": "Contacts operations endpoint"
       }
     ],
-
     "paths": {
-      "/": {
+      "/api/contacts": {
         "get": {
           "parameters": [],
+          "security": [{ "bearerAuth": [] }],
           "tags": ["Contacts"],
           "summary": "Get all contacts",
           "description": "Returns all contacts from the system that the user has access to",
@@ -42,10 +42,30 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "type": "object",
-                    "items": {
-                      "$ref": "#/schemas/getContacs"
-                    }
+                    "$ref": "#/components/schemas/GetAllContactResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in"
+                }
+              }
+            },
+            "500": {
+              "description": "Unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GeneralServerErrorResponse"
                   }
                 }
               }
@@ -64,7 +84,7 @@
             "description": "Create object",
             "required": true,
             "content": {
-              "application/json": {
+              "multipart/form-data": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateContactRequest"
                 }
@@ -86,13 +106,63 @@
               "description": "Bad request",
               "content": {
                 "application/json": {
-                  "$ref": "#/components/schemas/CreateContactBadRequestError"
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorBadRequest"
+                  }
+                },
+                "example": {
+                  "message": "Missing field"
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in"
+                }
+              }
+            },
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                  }
+                },
+                "example": {
+                  "message": "Not found resource"
                 }
               }
             },
             "409": {
-              "description": "Duplicate key",
-              "content": {}
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorConflictResponse"
+                  }
+                },
+                "example": {
+                  "message": "Contact with such email already exist"
+                }
+              }
+            },
+            "500": {
+              "description": "Unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GeneralServerErrorResponse"
+                  }
+                }
+              }
             }
           }
         },
@@ -102,14 +172,8 @@
           "description": "Update user subscription"
         }
       },
-      "/avatars": {
-        "patch": {
-          "tags": ["Auth"],
-          "summary": "Update user avatar",
-          "description": "Update user avatar"
-        }
-      },
-      "/:contactId": {
+
+      "/api/contacts/:contactId": {
         "get": {
           "tags": ["Contacts"],
           "description": "fkkfk",
@@ -120,10 +184,56 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "/models/Contact.ts"
-                    }
+                    "$ref": "#/components/schemas/GetContact"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/"
+                  }
+                },
+                "example": {
+                  "message": "Id is not valid"
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in"
+                }
+              }
+            },
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                  }
+                },
+                "example": {
+                  "message": "Not found resource"
+                }
+              }
+            },
+            "500": {
+              "description": "Unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GeneralServerErrorResponse"
                   }
                 }
               }
@@ -133,49 +243,126 @@
         "delete": {
           "tags": ["Contacts"],
           "summary": "Delete contact",
-          "description": "Delete contact"
+          "description": "Delete contact",
+          "responses": {
+            "200": {
+              "description": "Contact successfully deleted",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "description": "contact was successfully deleted",
+                        "example": "contact was successfully deleted"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorBadRequest"
+                  }
+                },
+                "example": {
+                  "message": "Invalid id"
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in"
+                }
+              }
+            },
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                  }
+                },
+                "example": {
+                  "message": "Not found resource"
+                }
+              }
+            },
+            "500": {
+              "description": "Unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GeneralServerErrorResponse"
+                  }
+                }
+              }
+            }
+          }
         }
       },
-      "/:contactId/favorite": {
+      "/api/contacts/:contactId/favorite": {
         "patch": {
           "tags": ["Contacts"],
           "summary": "Update contact"
         }
       },
-      "/signup": {
+      "/users/signup": {
         "post": {
           "tags": ["Auth"],
           "summary": "Signup user"
         }
       },
-      "/signin": {
+
+      "/users/signin": {
         "post": {
           "tags": ["Auth"],
           "summary": "Signin user"
         }
       },
-      "/current": {
+      "/users/signout": {
         "get": {
           "tags": ["Auth"],
-          "summary": "Get current user"
+          "summary": "Signout user"
         }
       },
-      "/verify/:verificationToken": {
+      "/users/verify/:verificationToken": {
         "get": {
           "tags": ["Auth"],
           "summary": "Verification letter for user email"
         }
       },
-      "/verify": {
+      "/users/verify": {
         "get": {
           "tags": ["Auth"],
           "summary": "Repead user verify"
         }
       },
-      "/signout": {
+      "/users/avatars": {
+        "patch": {
+          "tags": ["Auth"],
+          "summary": "Update user avatar",
+          "description": "Update user avatar"
+        }
+      },
+
+      "/users/current": {
         "get": {
           "tags": ["Auth"],
-          "summary": "Signout user"
+          "summary": "Get current user"
         }
       }
     },
@@ -260,18 +447,194 @@
             }
           }
         },
-        "CreateContactBadRequestError": {
+
+        "GetAllContactResponse": {
           "type": "object",
           "properties": {
+            "result": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Contact`s name"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Contact`s email"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "Contact`s phone number"
+                  },
+                  "favorite": {
+                    "type": "string",
+                    "description": "Contact`s _id"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "description": "Contact`s _id"
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "Contact`s _id"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "email"
+                      },
+                      "subscription": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "_id": {
+                    "type": "string",
+                    "description": "Contact`s _id"
+                  }
+                }
+              }
+            },
+            "total": {
+              "type": "number"
+            },
+            "per_page": {
+              "type": "number"
+            }
+          }
+        },
+        "GetContact": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Contact`s name"
+            },
             "email": {
               "type": "string",
-              "description": "Required"
+              "description": "Contact`s email"
+            },
+            "phone": {
+              "type": "string",
+              "description": "Contact`s phone number"
+            },
+            "favorite": {
+              "type": "string",
+              "description": "Contact`s _id"
+            },
+            "avatar": {
+              "type": "string",
+              "description": "Contact`s _id"
+            },
+            "owner": {
+              "type": "string",
+              "description": "owner"
+            },
+            "_id": {
+              "type": "string",
+              "description": "Contact`s _id"
+            }
+          }
+        },
+        "GeneralServerErrorResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "integer",
+              "description": "Internal server error",
+              "example": "500"
+            },
+            "message": {
+              "type": "string",
+              "description": " Error message",
+              "example": "Server Error"
+            }
+          }
+        },
+        "ErrorConflictResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "integer",
+              "description": "Error status code",
+              "example": "409"
+            },
+            "message": {
+              "type": "string",
+              "description": " Error message",
+              "example": "User with email - user@example.com, already exist"
+            }
+          }
+        },
+        "ErrorUnauthorizedResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "integer",
+              "description": "Error status code",
+              "example": "401"
+            },
+            "message": {
+              "type": "string",
+              "description": " Error message",
+              "example": "Not authorized"
+            }
+          }
+        },
+        "ErrorNotFoundResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "integer",
+              "description": "Error status code",
+              "example": "404"
+            },
+            "message": {
+              "type": "string",
+              "description": "Error message",
+              "example": "Not found"
+            }
+          }
+        },
+        "ErrorRemoveContactResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "example": "failure"
+            }
+          },
+          "code": { "type": "integer", "example": "409" },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "The contact you are trying to delete is not exist"
+          }
+        },
+        "ErrorBadRequest": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "integer",
+              "description": "Error status code",
+              "example": "400"
+            },
+
+            "message": {
+              "type": "string",
+              "description": "Error message",
+              "example": "Bad request"
             }
           }
         }
       }
     }
   },
+
   "apis": [
     "./routes/api/auth-contacts-router.ts",
     "./models/Contact.ts",
