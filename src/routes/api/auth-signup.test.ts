@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
-import { app } from "../../app.ts";
+import { app } from "../../app";
 import supertest from "supertest";
 
-import User from "../../models/User.ts";
+import User from "../../models/User";
 
 const { DB_TEST_HOST, PORT } = process.env;
 
 describe("test /users/signup", () => {
-  let server = null;
+  let server: any = null;
 
   beforeAll(async () => {
     await mongoose.connect(DB_TEST_HOST!);

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { HttpError } from "../helpers/index.ts";
+import { HttpError } from "../helpers/index";
 
 const isEmptyBody = async (req: Request, res: Response, next: NextFunction) => {
   const allKeys = Object.keys(req.body);

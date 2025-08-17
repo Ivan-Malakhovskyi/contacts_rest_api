@@ -2,9 +2,9 @@ import express, { Request, Response, NextFunction } from "express";
 import logger from "morgan";
 import cors from "cors";
 import "dotenv/config"; //! скорочений запис
-import contactsRouter from "./routes/api/contacts-router.ts";
-import authRouter from "./routes/api/auth-contacts-router.ts";
-import { swaggerDocs } from "./utils/swagger.ts";
+import contactsRouter from "./routes/api/contacts-router";
+import authRouter from "./routes/api/auth-contacts-router";
+import { swaggerDocs } from "./utils/swagger";
 
 export const app = express(); //* web-server
 

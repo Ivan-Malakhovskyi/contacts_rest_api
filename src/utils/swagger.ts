@@ -1,8 +1,8 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import type { Express } from "express";
-import { log } from "./logger.ts";
-import options from "../openapi.ts";
+import { log } from "./logger";
+import options from "../openapi";
 
 const swaggerSpec = swaggerJSDoc(options);
 

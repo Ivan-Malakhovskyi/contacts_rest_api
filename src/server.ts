@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { app } from "./app.ts";
-import { log } from "./utils/logger.ts";
-import { wakeUp } from "./utils/wake-up.ts";
+import { app } from "./app";
+import { log } from "./utils/logger";
+import { wakeUp } from "./utils/wake-up";
 
 const { DB_HOST, PORT = 3000 } = process.env;
 

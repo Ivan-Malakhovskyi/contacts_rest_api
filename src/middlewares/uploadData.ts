@@ -1,7 +1,7 @@
 import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import { Request } from "express";
-import { HttpError } from "../helpers/index.ts";
+import { HttpError } from "../helpers/index";
 
 const tempDir = path.resolve("temp"); //*На поч.адреси підставляє абсолютний шлях до проекту
 

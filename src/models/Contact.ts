@@ -1,5 +1,5 @@
 import { ObjectId, Schema, model } from "mongoose";
-import { handleSaveErr, handlePreUpdate } from "./hooks.ts";
+import { handleSaveErr, handlePreUpdate } from "./hooks";
 import Joi from "joi";
 
 const phoneRegex = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;

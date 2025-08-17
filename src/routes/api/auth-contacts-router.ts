@@ -1,17 +1,13 @@
 import express from "express";
-import authController from "../../controllers/auth-controller.ts";
-import {
-  authentication,
-  isEmptyBody,
-  upload,
-} from "../../middlewares/index.ts";
-import { validateBodyRequest } from "../../decorators/index.ts";
+import authController from "../../controllers/auth-controller";
+import { authentication, isEmptyBody, upload } from "../../middlewares/index";
+import { validateBodyRequest } from "../../decorators/index";
 import {
   userSignupSchema,
   userSigninSchema,
   repeadUserVerifySchema,
   userUpdateSubcsriptionSchema,
-} from "../../models/User.ts";
+} from "../../models/User";
 
 const authRouter = express.Router();
 

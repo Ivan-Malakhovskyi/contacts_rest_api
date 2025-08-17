@@ -1,14 +1,13 @@
 import mongoose from "mongoose";
-import { app } from "../../app.ts";
+import { app } from "../../app";
 import supertest from "supertest";
 import jwt from "jsonwebtoken";
-import User from "../../models/User.ts";
-import bcrypt from "bcrypt";
+import User from "../../models/User";
 
 const { DB_TEST_HOST, JWT_SECRET_KEY } = process.env;
 
 describe("test user/signin router", () => {
-  let server = null;
+  let server: any = null;
 
   beforeAll(async () => {
     await mongoose.connect(DB_TEST_HOST!);

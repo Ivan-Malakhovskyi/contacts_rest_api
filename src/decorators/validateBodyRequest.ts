@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { HttpError } from "../helpers/index.ts";
+import { HttpError } from "../helpers/index";
 import type { Request, Response, NextFunction } from "express";
 
 const validateBodyRequest = (schema: Joi.Schema) => {

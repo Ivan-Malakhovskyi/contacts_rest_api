@@ -5,7 +5,9 @@
     "target": "esnext",
     "noImplicitAny": true,
     "allowJs": true,
+    "rootDir": "src",
     "outDir": "dist",
+    "baseUrl": "src",
     "module": "commonjs",
     "lib": ["ES2021"],
     "moduleResolution": "node",
@@ -16,10 +18,9 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
-    "noEmit": true,
     "resolveJsonModule": true
   },
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,10 +1,10 @@
 import fs from "fs/promises";
 import path from "path";
-import { HttpError } from "../helpers/index.ts";
-import Contact from "../models/Contact.ts";
-import { ctrlContactWrapper } from "../decorators/index.ts";
+import { HttpError } from "../helpers/index";
+import Contact from "../models/Contact";
+import { ctrlContactWrapper } from "../decorators/index";
 import type { NextFunction, Request, Response } from "express";
-import { IUser } from "../types/index.ts";
+import { IUser } from "../types/index";
 
 const avatarsPath = path.resolve("public", "avatars");
 

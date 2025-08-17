@@ -1,10 +1,10 @@
 import "dotenv/config";
 import jsonwebtoken from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { HttpError } from "../helpers/index.ts";
-import { ctrlContactWrapper } from "../decorators/index.ts";
-import User from "../models/User.ts";
-import { IUser } from "../types/index.ts";
+import { HttpError } from "../helpers/index";
+import { ctrlContactWrapper } from "../decorators/index";
+import User from "../models/User";
+import { IUser } from "../types/index";
 
 const { JWT_SECRET_KEY } = process.env;
 

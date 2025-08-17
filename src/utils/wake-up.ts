@@ -1,7 +1,7 @@
 import nodeCron from "node-cron";
 import axios from "axios";
-import { log } from "./logger.ts";
-import HttpError from "../helpers/HttpError.ts";
+import { log } from "./logger";
+import HttpError from "../helpers/HttpError";
 
 const healthCheck = async () => {
   try {

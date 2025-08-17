@@ -9,10 +9,10 @@ import "dotenv/config";
 import jimp from "jimp";
 import { ObjectId } from "mongoose";
 
-import User from "../models/User.ts";
-import { ctrlContactWrapper } from "../decorators/index.ts";
-import { HttpError, sendEmail } from "../helpers/index.ts";
-import { IUser } from "../types/index.ts";
+import User from "../models/User";
+import { ctrlContactWrapper } from "../decorators/index";
+import { HttpError, sendEmail } from "../helpers/index";
+import { IUser } from "../types/index";
 
 const avatarsPath = path.resolve("public", "avatars");
 
