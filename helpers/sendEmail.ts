@@ -14,7 +14,7 @@ const config = {
 
 const transport = nodemailer.createTransport(config);
 
-const sendEmail = (data) => {
+const sendEmail = (data: any) => {
   const email = { ...data, from: GMAIL_SENT_FROM };
   return transport.sendMail(email);
 };

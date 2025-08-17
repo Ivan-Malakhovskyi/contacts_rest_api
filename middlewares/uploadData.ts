@@ -1,5 +1,6 @@
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 import path from "path";
+import { Request } from "express";
 import { HttpError } from "../helpers/index.ts";
 
 const tempDir = path.resolve("temp"); //*На поч.адреси підставляє абсолютний шлях до проекту
@@ -20,7 +21,11 @@ const limits = {
   fileSize: 5 * 1024 * 1024,
 };
 
-const fileFilter = (req, file, cb) => {
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
   const ext = file.originalname.split(".").pop();
 
   if (ext === "exe") {

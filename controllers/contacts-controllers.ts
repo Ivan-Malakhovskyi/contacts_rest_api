@@ -3,14 +3,21 @@ import path from "path";
 import { HttpError } from "../helpers/index.ts";
 import Contact from "../models/Contact.ts";
 import { ctrlContactWrapper } from "../decorators/index.ts";
+import type { NextFunction, Request, Response } from "express";
+import { IUser } from "../types/index.ts";
 
 const avatarsPath = path.resolve("public", "avatars");
 
-const getAll = async (req, res, next) => {
+const getAll = async (
+  req: Request & IUser,
+  res: Response,
+  next: NextFunction
+) => {
   const { _id: owner } = req.user;
   const { page = 1, limit = 20, ...filterQueryParams } = req.query;
 
-  const skip = (page - 1) * limit;
+  const numLimit = Number(limit);
+  const skip = (Number(page) - 1) * numLimit;
 
   const count = await Contact.countDocuments({ owner });
 
@@ -18,7 +25,7 @@ const getAll = async (req, res, next) => {
 
   const result = await Contact.find(filterQuery, "-createdAt -updatedAt", {
     skip,
-    limit,
+    numLimit,
   }).populate("owner", "email subscription");
 
   //*Будуть отримані ті фільми, якщо цей користувач їх додав
@@ -29,7 +36,11 @@ const getAll = async (req, res, next) => {
   });
 };
 
-const getById = async (req, res, next) => {
+const getById = async (
+  req: Request & IUser,
+  res: Response,
+  next: NextFunction
+) => {
   const { contactId } = req.params;
   const { _id: owner } = req.user;
   const result = await Contact.findOne({ _id: contactId, owner });
@@ -42,9 +53,10 @@ const getById = async (req, res, next) => {
   res.json(result);
 };
 
-const add = async (req, res, next) => {
+const add = async (req: Request & IUser, res: Response, next: NextFunction) => {
   const { _id: owner } = req.user;
-  const { path: oldPath, filename } = req.file;
+
+  const { path: oldPath, filename } = req.file as Express.Multer.File;
   const newPath = path.join(avatarsPath, filename);
   await fs.rename(oldPath, newPath);
 
@@ -54,7 +66,11 @@ const add = async (req, res, next) => {
   res.status(201).json(result);
 };
 
-const updateById = async (req, res, next) => {
+const updateById = async (
+  req: Request & IUser,
+  res: Response,
+  next: NextFunction
+) => {
   const { contactId } = req.params;
   const { _id: owner } = req.user;
   const result = await Contact.findOneAndUpdate(
@@ -72,7 +88,11 @@ const updateById = async (req, res, next) => {
   res.status(200).json(result);
 };
 
-const deleteById = async (req, res, next) => {
+const deleteById = async (
+  req: Request & IUser,
+  res: Response,
+  next: NextFunction
+) => {
   const { contactId } = req.params;
   const { _id: owner } = req.user;
   const result = await Contact.findOneAndDelete({ _id: contactId, owner });

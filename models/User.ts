@@ -1,10 +1,11 @@
 import { Schema, model } from "mongoose";
 import { handleSaveErr, handlePreUpdate } from "./hooks.ts";
 import Joi from "joi";
+import { UserDocument } from "../types/index.ts";
 
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-const userSchema = new Schema(
+const userSchema = new Schema<UserDocument>(
   {
     password: {
       type: String,
@@ -42,7 +43,10 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-userSchema.pre("findOneAndUpdate", handlePreUpdate);
+userSchema.pre("findOneAndUpdate", function name(next) {
+  handlePreUpdate.call(this, next);
+});
+
 userSchema.post("save", handleSaveErr);
 userSchema.post("findOneAndUpdate", handleSaveErr);
 

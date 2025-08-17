@@ -1,10 +1,19 @@
-import { Schema, model } from "mongoose";
+import { ObjectId, Schema, model } from "mongoose";
 import { handleSaveErr, handlePreUpdate } from "./hooks.ts";
 import Joi from "joi";
 
 const phoneRegex = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
 
-export const contactSchema = new Schema(
+export interface IContactSchema {
+  name: string;
+  email: string;
+  phone: string;
+  favorite: boolean;
+  avatar: string;
+  owner: ObjectId;
+}
+
+export const contactSchema = new Schema<IContactSchema>(
   {
     name: {
       type: String,
@@ -42,7 +51,9 @@ export const contactSchema = new Schema(
   { versionKey: false, timestamps: true } //*налаштування схеми
 );
 
-contactSchema.pre("findOneAndUpdate", handlePreUpdate);
+contactSchema.pre("findOneAndUpdate", function name(next) {
+  handlePreUpdate.call(this, next);
+});
 
 contactSchema.post("save", handleSaveErr); //* хук
 

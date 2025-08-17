@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from "express";
 import { nanoid } from "nanoid";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
@@ -6,24 +7,26 @@ import path from "path";
 import fs from "fs/promises";
 import "dotenv/config";
 import jimp from "jimp";
+import { ObjectId } from "mongoose";
 
 import User from "../models/User.ts";
 import { ctrlContactWrapper } from "../decorators/index.ts";
 import { HttpError, sendEmail } from "../helpers/index.ts";
+import { IUser } from "../types/index.ts";
 
 const avatarsPath = path.resolve("public", "avatars");
 
 const { JWT_SECRET_KEY, BASE_URL } = process.env;
 
-const verifyEnvelop = (email, verificationToken) => {
+const verifyEnvelop = (email: string, verificationToken: string) => {
   return {
     to: email,
     subject: "Veification email",
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">please verify your email by clicking the following link</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/verify/${verificationToken}">please verify your email by clicking the following link</a>`,
   };
 };
 
-const signup = async (req, res) => {
+const signup = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   const avatarURL = gravatar.url(email);
@@ -52,7 +55,7 @@ const signup = async (req, res) => {
   });
 };
 
-const verifyEmail = async (req, res) => {
+const verifyEmail = async (req: Request, res: Response) => {
   const { verificationToken } = req.params;
 
   const user = await User.findOne({ verificationToken });
@@ -74,7 +77,7 @@ const verifyEmail = async (req, res) => {
   });
 };
 
-const repeadVerify = async (req, res) => {
+const repeadVerify = async (req: Request, res: Response) => {
   const { email } = req.body;
 
   const user = await User.findOne({ email });
@@ -94,10 +97,11 @@ const repeadVerify = async (req, res) => {
   });
 };
 
-const signin = async (req, res) => {
+const signin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
+  console.log(user);
 
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
@@ -113,12 +117,12 @@ const signin = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  const payload = {
+  const payload: { id: ObjectId } = {
     id: user._id,
   };
 
   const token = jsonwebtoken.sign(payload, JWT_SECRET_KEY!, {
-    expiresIn: "20h",
+    expiresIn: "24h",
   });
 
   await User.findByIdAndUpdate(user._id, { token });
@@ -132,7 +136,7 @@ const signin = async (req, res) => {
   });
 };
 
-const current = async (req, res) => {
+const current = async (req: Request & IUser, res: Response) => {
   const { email, subscription } = req.user;
 
   res.status(200).json({
@@ -141,7 +145,7 @@ const current = async (req, res) => {
   });
 };
 
-const signout = async (req, res) => {
+const signout = async (req: Request & IUser, res: Response) => {
   const { _id } = req.user;
 
   await User.findByIdAndUpdate(_id, { token: "" });
@@ -149,14 +153,18 @@ const signout = async (req, res) => {
   res.status(204).json();
 };
 
-const updateUserSubscr = async (req, res, next) => {
+const updateUserSubscr = async (
+  req: Request & IUser,
+  res: Response,
+  next: NextFunction
+) => {
   const { subscription } = req.body;
   const { token } = req.user;
 
-  const { id } = jsonwebtoken.verify(token, JWT_SECRET_KEY);
+  const resp: any = jsonwebtoken.verify(token, JWT_SECRET_KEY!);
 
   const updateUser = await User.findByIdAndUpdate(
-    id,
+    resp.id,
     { subscription },
     { new: true, runValidators: true }
   );
@@ -168,10 +176,14 @@ const updateUserSubscr = async (req, res, next) => {
   res.status(200).json(updateUser);
 };
 
-const updateAvatar = async (req, res, next) => {
+const updateAvatar = async (
+  req: Request & IUser,
+  res: Response,
+  next: NextFunction
+) => {
   const { _id } = req.user;
-  const { path: oldPath, filename } = req.file;
 
+  const { path: oldPath, filename } = req?.file as Express.Multer.File;
   const newPath = path.join(avatarsPath, filename);
 
   (await jimp.read(oldPath)).resize(250, 250).write(oldPath);

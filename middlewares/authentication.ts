@@ -1,12 +1,19 @@
+import "dotenv/config";
 import jsonwebtoken from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 import { HttpError } from "../helpers/index.ts";
 import { ctrlContactWrapper } from "../decorators/index.ts";
 import User from "../models/User.ts";
-import "dotenv/config";
+import { IUser } from "../types/index.ts";
 
 const { JWT_SECRET_KEY } = process.env;
 
-const authentication = async (req, res, next) => {
+const authentication = async (
+  req: Request & IUser,
+  res: Response & { id: string },
+  next: NextFunction
+) => {
+  console.log(req);
   const { authorization } = req.headers;
   if (!authorization) {
     throw HttpError(401, "Not authorized");
@@ -15,20 +22,23 @@ const authentication = async (req, res, next) => {
   const [bearer, token] = authorization.split(" ");
 
   if (bearer !== "Bearer") {
-    throw HttpError(401);
+    throw HttpError(401, "Invalid auth type");
   }
 
   try {
-    const { id } = jsonwebtoken.verify(token, JWT_SECRET_KEY!);
-    const user = await User.findById(id);
+    const resp: any = jsonwebtoken.verify(token, JWT_SECRET_KEY!);
+
+    const user: IUser["user"] | null = await User.findById(resp.id);
+
     if (!user || !user.token || user.token !== token) {
       throw HttpError(401, "Not authorized");
     }
+
     req.user = user;
 
     next();
   } catch (error) {
-    throw HttpError(401, error.message);
+    throw HttpError(401, (error as Error).message);
   }
 };
 
