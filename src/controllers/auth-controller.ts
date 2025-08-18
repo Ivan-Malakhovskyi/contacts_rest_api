@@ -7,14 +7,15 @@ import path from "path";
 import fs from "fs/promises";
 import "dotenv/config";
 import jimp from "jimp";
-import { ObjectId } from "mongoose";
+import type { ObjectId } from "mongoose";
 
 import User from "../models/User";
 import { ctrlContactWrapper } from "../decorators/index";
 import { HttpError, sendEmail } from "../helpers/index";
-import { IUser } from "../types/index";
+import { IUser, UserDocument } from "../types/index";
+import { isDev } from "../utils/currEnv";
 
-const avatarsPath = path.resolve("public", "avatars");
+const avatarsPath = path.resolve(isDev ? "src" : "dist", "public", "avatars");
 
 const { JWT_SECRET_KEY, BASE_URL } = process.env;
 
@@ -100,8 +101,7 @@ const repeadVerify = async (req: Request, res: Response) => {
 const signin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-  console.log(user);
+  const user: UserDocument | null = await User.findOne({ email });
 
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
@@ -118,7 +118,7 @@ const signin = async (req: Request, res: Response) => {
   }
 
   const payload: { id: ObjectId } = {
-    id: user._id,
+    id: user._id as ObjectId,
   };
 
   const token = jsonwebtoken.sign(payload, JWT_SECRET_KEY!, {

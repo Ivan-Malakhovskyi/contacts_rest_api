@@ -2,8 +2,9 @@ import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import { Request } from "express";
 import { HttpError } from "../helpers/index";
+import { isDev } from "../utils/currEnv";
 
-const tempDir = path.resolve("temp"); //*На поч.адреси підставляє абсолютний шлях до проекту
+const tempDir = path.resolve(isDev ? "src" : "dist", "temp"); //*На поч.адреси підставляє абсолютний шлях до проекту
 
 const storage = multer.diskStorage({
   //*Шлях до тимчасової папки

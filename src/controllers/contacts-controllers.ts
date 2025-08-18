@@ -1,12 +1,14 @@
 import fs from "fs/promises";
 import path from "path";
+import "dotenv/config";
 import { HttpError } from "../helpers/index";
 import Contact from "../models/Contact";
 import { ctrlContactWrapper } from "../decorators/index";
 import type { NextFunction, Request, Response } from "express";
 import { IUser } from "../types/index";
+import { isDev } from "../utils/currEnv";
 
-const avatarsPath = path.resolve("public", "avatars");
+const avatarsPath = path.resolve(isDev ? "src" : "dist", "public", "avatars");
 
 const getAll = async (
   req: Request & IUser,
@@ -54,7 +56,15 @@ const getById = async (
 };
 
 const add = async (req: Request & IUser, res: Response, next: NextFunction) => {
+  if (req.headers["content-type"] === "application/json") {
+    throw HttpError(400, "Invalid Content-Type");
+  }
+
+  console.log(req.file);
+  console.log(req.body);
   const { _id: owner } = req.user;
+  if (!req.file) {
+  }
 
   const { path: oldPath, filename } = req.file as Express.Multer.File;
   const newPath = path.join(avatarsPath, filename);
