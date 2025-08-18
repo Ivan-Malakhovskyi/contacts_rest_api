@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "20.x"
+    "node": ">=24.4.1"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node -r tsconfig-paths/register ./dist/server.js",
