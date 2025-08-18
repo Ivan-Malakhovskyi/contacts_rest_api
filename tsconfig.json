@@ -5,7 +5,6 @@
     "target": "esnext",
     "noImplicitAny": true,
     "allowJs": true,
-    "rootDir": "src",
     "outDir": "dist",
     "baseUrl": "src",
     "module": "commonjs",
