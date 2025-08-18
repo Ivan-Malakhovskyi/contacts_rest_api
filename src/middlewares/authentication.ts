@@ -13,7 +13,6 @@ const authentication = async (
   res: Response & { id: string },
   next: NextFunction
 ) => {
-  console.log(req);
   const { authorization } = req.headers;
   if (!authorization) {
     throw HttpError(401, "Not authorized");
