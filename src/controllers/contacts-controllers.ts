@@ -1,12 +1,15 @@
 import fs from "fs/promises";
 import path from "path";
+import "dotenv/config";
+import type { NextFunction, Request, Response } from "express";
+import gravatar from "gravatar";
 import { HttpError } from "../helpers/index";
 import Contact from "../models/Contact";
 import { ctrlContactWrapper } from "../decorators/index";
-import type { NextFunction, Request, Response } from "express";
 import { IUser } from "../types/index";
+import { isDev } from "../utils/currEnv";
 
-const avatarsPath = path.resolve("public", "avatars");
+const avatarsPath = path.resolve(isDev ? "src" : "dist", "public", "avatars");
 
 const getAll = async (
   req: Request & IUser,
@@ -54,15 +57,24 @@ const getById = async (
 };
 
 const add = async (req: Request & IUser, res: Response, next: NextFunction) => {
+  let avatar;
+
+  if (req.headers["content-type"] === "application/json") {
+    throw HttpError(400, "Invalid Content-Type");
+  }
+
   const { _id: owner } = req.user;
 
-  const { path: oldPath, filename } = req.file as Express.Multer.File;
-  const newPath = path.join(avatarsPath, filename);
-  await fs.rename(oldPath, newPath);
+  if (req.file) {
+    const { path: oldPath, filename } = req.file as Express.Multer.File;
+    const newPath = path.join(avatarsPath, filename);
+    await fs.rename(oldPath, newPath);
 
-  const avatar = path.join("avatars", filename);
+    avatar = path.join("avatars", filename);
+  } else {
+    avatar = req.user.avatarURL;
+  }
   const result = await Contact.create({ ...req.body, avatar, owner });
-
   res.status(201).json(result);
 };
 

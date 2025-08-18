@@ -1,6 +1,6 @@
 import { ObjectId, Schema, model } from "mongoose";
-import { handleSaveErr, handlePreUpdate } from "./hooks";
 import Joi from "joi";
+import { handleSaveErr, handlePreUpdate } from "./hooks";
 
 const phoneRegex = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
 
@@ -41,7 +41,7 @@ export const contactSchema = new Schema<IContactSchema>(
     },
     avatar: {
       type: String,
-      required: [true, "set avatar for contact"],
+      required: false,
     },
     owner: {
       type: Schema.Types.ObjectId,

@@ -1,4 +1,4 @@
-import type { ObjectId } from "mongodb";
+import type { ObjectId } from "mongoose";
 import type { Document } from "mongoose";
 
 export interface IUser {
