@@ -2,7 +2,6 @@ import fs from "fs/promises";
 import path from "path";
 import "dotenv/config";
 import type { NextFunction, Request, Response } from "express";
-import gravatar from "gravatar";
 import { HttpError } from "../helpers/index";
 import Contact from "../models/Contact";
 import { ctrlContactWrapper } from "../decorators/index";

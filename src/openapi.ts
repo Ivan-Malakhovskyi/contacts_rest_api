@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 export default {
   definition: {
     openapi: "3.0.4",
@@ -58,11 +60,29 @@ export default {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                    oneOf: [
+                      {
+                        $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                      },
+                      { $ref: "#/components/schemas/ErrorAuthJWTExpired" },
+                    ],
                   },
-                },
-                example: {
-                  message: "Authentication failed. Please log in",
+                  examples: {
+                    NotAuthorized: {
+                      summary: "Missing/invalid token",
+                      value: {
+                        status: 401,
+                        message: "Not Authorized",
+                      },
+                    },
+                    JWTExpired: {
+                      summary: "Expired token",
+                      value: {
+                        status: 401,
+                        message: "JWT Expired",
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -126,11 +146,29 @@ export default {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                    oneOf: [
+                      {
+                        $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                      },
+                      { $ref: "#/components/schemas/ErrorAuthJWTExpired" },
+                    ],
                   },
-                },
-                example: {
-                  message: "Authentication failed. Please log in",
+                  examples: {
+                    NotAuthorized: {
+                      summary: "Missing/invalid token",
+                      value: {
+                        status: 401,
+                        message: "Not Authorized",
+                      },
+                    },
+                    JWTExpired: {
+                      summary: "Expired token",
+                      value: {
+                        status: 401,
+                        message: "JWT Expired",
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -184,6 +222,18 @@ export default {
           tags: ["Contacts"],
           description: "fkkfk",
           summary: "Get contacts by Id",
+          parameters: [
+            {
+              in: "path",
+              name: "contactId",
+              required: true,
+              schema: {
+                type: "integer",
+                maximum: 1,
+              },
+              description: "The Contact id",
+            },
+          ],
           responses: {
             "200": {
               description: "A list of pets.",
@@ -213,11 +263,29 @@ export default {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                    oneOf: [
+                      {
+                        $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                      },
+                      { $ref: "#/components/schemas/ErrorAuthJWTExpired" },
+                    ],
                   },
-                },
-                example: {
-                  message: "Authentication failed. Please log in",
+                  examples: {
+                    NotAuthorized: {
+                      summary: "Missing/invalid token",
+                      value: {
+                        status: 401,
+                        message: "Not Authorized",
+                      },
+                    },
+                    JWTExpired: {
+                      summary: "Expired token",
+                      value: {
+                        status: 401,
+                        message: "JWT Expired",
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -250,6 +318,18 @@ export default {
           tags: ["Contacts"],
           summary: "Delete contact",
           description: "Delete contact",
+          parameters: [
+            {
+              in: "path",
+              name: "contactId",
+              required: true,
+              schema: {
+                type: "integer",
+                maximum: 1,
+              },
+              description: "The Contact id",
+            },
+          ],
           responses: {
             "200": {
               description: "Contact successfully deleted",
@@ -286,11 +366,29 @@ export default {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                    oneOf: [
+                      {
+                        $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                      },
+                      { $ref: "#/components/schemas/ErrorAuthJWTExpired" },
+                    ],
                   },
-                },
-                example: {
-                  message: "Authentication failed. Please log in",
+                  examples: {
+                    NotAuthorized: {
+                      summary: "Missing/invalid token",
+                      value: {
+                        status: 401,
+                        message: "Not Authorized",
+                      },
+                    },
+                    JWTExpired: {
+                      summary: "Expired token",
+                      value: {
+                        status: 401,
+                        message: "JWT Expired",
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -322,42 +420,66 @@ export default {
       },
       "/api/contacts/:contactId/favorite": {
         patch: {
+          parameters: [
+            {
+              in: "path",
+              name: "contactId",
+              required: true,
+              schema: {
+                type: "integer",
+                maximum: 1,
+              },
+              description: "The Contact id",
+            },
+          ],
           tags: ["Contacts"],
           summary: "Update contact",
         },
       },
-      "/users/signup": {
+      "/signup": {
         post: {
           tags: ["Auth"],
           summary: "Signup user",
         },
       },
 
-      "/users/signin": {
+      "/signin": {
         post: {
           tags: ["Auth"],
           summary: "Signin user",
         },
       },
-      "/users/signout": {
+      "/signout": {
         get: {
           tags: ["Auth"],
           summary: "Signout user",
         },
       },
-      "/users/verify/:verificationToken": {
+      "/verify/:verificationToken": {
         get: {
           tags: ["Auth"],
+          parameters: [
+            {
+              in: "path",
+              name: "verificationToken",
+              required: true,
+              schema: {
+                type: "integer",
+                maximum: 1,
+              },
+              description: "Token for verify",
+            },
+          ],
           summary: "Verification letter for user email",
         },
       },
-      "/users/verify": {
+      "/verify": {
         get: {
           tags: ["Auth"],
           summary: "Repead user verify",
         },
       },
-      "/users/avatars": {
+      "/avatars": {
         patch: {
           tags: ["Auth"],
           summary: "Update user avatar",
@@ -365,7 +487,7 @@ export default {
         },
       },
 
-      "/users/current": {
+      "/current": {
         get: {
           tags: ["Auth"],
           summary: "Get current user",
@@ -580,13 +702,12 @@ export default {
           properties: {
             status: {
               type: "integer",
-              description: "Error status code",
               example: "401",
             },
             message: {
               type: "string",
-              description: " Error message",
-              example: "Not authorized",
+              description: "Error message",
+              example: "Not Authorized",
             },
           },
         },
@@ -625,14 +746,29 @@ export default {
           properties: {
             status: {
               type: "integer",
-              description: "Error status code",
-              example: "400",
+              description: "400",
+              example: "Error status code",
             },
 
             message: {
               type: "string",
-              description: "Error message",
+              description: "Bad request",
               example: "Bad request",
+            },
+          },
+        },
+        ErrorAuthJWTExpired: {
+          type: "object",
+          properties: {
+            status: {
+              type: "string",
+              description: "401",
+              example: "Unauthorized",
+            },
+            message: {
+              type: "string",
+              description: "JWT expired",
+              example: "JWT expired",
             },
           },
         },

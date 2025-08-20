@@ -49,29 +49,26 @@ Built with **Node.js**, **Express**, and **MongoDB**.
 
 ### Auth
 
-| Method | Endpoint                   | Description                                       |
-| ------ | -------------------------- | ------------------------------------------------- |
-| POST   | `/api/users/register`      | Register a new user (email verification required) |
-| POST   | `/api/users/login`         | Authenticate user and return token                |
-| GET    | `/api/users/verify/:token` | Verify email using token                          |
-| POST   | `/api/users/verify`        | Resend verification email                         |
-
-### User
-
-| Method | Endpoint                  | Description                          |
-| ------ | ------------------------- | ------------------------------------ |
-| GET    | `/api/users/current`      | Get current user info (JWT required) |
-| PATCH  | `/api/users/subscription` | Update subscription plan             |
-| PATCH  | `/api/users/avatar`       | Update user avatar                   |
+| Method | Endpoint                  | Description                                       |
+| ------ | ------------------------- | ------------------------------------------------- |
+| POST   | `/api/auth/signup`        | Register a new user (email verification required) |
+| POST   | `/api/auth/signin`        | Authenticate user and return token                |
+| GET    | `/api/auth/verify/:token` | Verify email using token                          |
+| POST   | `/api/auth/verify`        | Resend verification email                         |
+| Method | Endpoint                  | Description                                       |
+|        |
+| ------ | ------------------------- | ------------------------------------              |
+| GET    | `/api/auth/current`       | Get current user info (JWT required)              |
+| PATCH  | `/api/auth/subscription`  | Update subscription plan                          |
+| PATCH  | `/api/auth/avatar`        | Update user avatar                                |
 
 ### Contacts
 
 | Method | Endpoint                   | Description                               |
-| ------ | -------------------------- | ----------------------------------------- |
+| ------ | -------------------------- | ----------------------------------------- | --- |
 | GET    | `/api/contacts`            | Get all contacts (with pagination/filter) |
 | GET    | `/api/contacts/:id`        | Get contact by ID                         |
-| POST   | `/api/contacts`            | Create new contact                        |
-| PUT    | `/api/contacts/:id`        | Update contact                            |
+| POST   | `/api/contacts`            | Create new contact                        |     |
 | PATCH  | `/api/contacts/:id/avatar` | Update contact avatar                     |
 | DELETE | `/api/contacts/:id`        | Delete contact                            |
 

@@ -26,6 +26,7 @@ const authentication = async (
 
   try {
     const resp: any = jsonwebtoken.verify(token, JWT_SECRET_KEY!);
+    console.log(resp);
 
     const user: IUser["user"] | null = await User.findById(resp.id);
 
