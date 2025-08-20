@@ -5,8 +5,8 @@
     "target": "esnext",
     "noImplicitAny": true,
     "allowJs": true,
-    "outDir": "dist",
-    "baseUrl": "src",
+    "outDir": "./dist",
+    "baseUrl": "./src",
     "module": "commonjs",
     "lib": ["ES2021"],
     "moduleResolution": "node",
@@ -23,7 +23,6 @@
       "@utils/*": ["utils/*"]
     }
   },
-
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }
