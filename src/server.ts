@@ -1,14 +1,12 @@
 import mongoose from "mongoose";
 import { app } from "./app";
 import { log } from "./utils/logger";
-import { wakeUp } from "./utils/wake-up";
 
 const { DB_HOST, PORT = 3000 } = process.env;
 
 mongoose
   .connect(DB_HOST!)
   .then(() => {
-    wakeUp();
     console.log("✔ Success conecting");
 
     app.listen(PORT, () => {
