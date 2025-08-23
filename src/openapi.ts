@@ -64,7 +64,9 @@ export default {
                       {
                         $ref: "#/components/schemas/ErrorUnauthorizedResponse",
                       },
-                      { $ref: "#/components/schemas/ErrorAuthJWTExpired" },
+                      {
+                        $ref: "#/components/schemas/ErrorAuthJWTExpiredResponse",
+                      },
                     ],
                   },
                   examples: {
@@ -87,7 +89,7 @@ export default {
               },
             },
             "500": {
-              description: "Unexpected error",
+              description: "Server error",
               content: {
                 "application/json": {
                   schema: {
@@ -101,11 +103,7 @@ export default {
         post: {
           tags: ["Contacts"],
           summary: "Create a new contact",
-          security: [
-            {
-              Bearer: [],
-            },
-          ],
+          security: [{ bearerAuth: [] }],
           requestBody: {
             description: "Create object",
             required: true,
@@ -133,11 +131,8 @@ export default {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorBadRequest",
+                    $ref: "#/components/schemas/ErrorBadRequestResponse",
                   },
-                },
-                example: {
-                  message: "Missing field",
                 },
               },
             },
@@ -150,7 +145,9 @@ export default {
                       {
                         $ref: "#/components/schemas/ErrorUnauthorizedResponse",
                       },
-                      { $ref: "#/components/schemas/ErrorAuthJWTExpired" },
+                      {
+                        $ref: "#/components/schemas/ErrorAuthJWTExpiredResponse",
+                      },
                     ],
                   },
                   examples: {
@@ -180,9 +177,6 @@ export default {
                     $ref: "#/components/schemas/ErrorNotFoundResponse",
                   },
                 },
-                example: {
-                  message: "Not found resource",
-                },
               },
             },
             "409": {
@@ -193,13 +187,10 @@ export default {
                     $ref: "#/components/schemas/ErrorConflictResponse",
                   },
                 },
-                example: {
-                  message: "Contact with such email already exist",
-                },
               },
             },
             "500": {
-              description: "Unexpected error",
+              description: "Server error",
               content: {
                 "application/json": {
                   schema: {
@@ -212,26 +203,27 @@ export default {
         },
         patch: {
           tags: ["Auth"],
+          security: [{ bearerAuth: [] }],
           summary: "Update user subscription",
           description: "Update user subscription",
         },
       },
 
-      "/api/contacts/:contactId": {
+      "/api/contacts/{contactId}": {
         get: {
           tags: ["Contacts"],
-          description: "fkkfk",
-          summary: "Get contacts by Id",
+          description: "Get By id",
+          summary: "Get contact by Id",
+          security: [{ bearerAuth: [] }],
           parameters: [
             {
               in: "path",
               name: "contactId",
               required: true,
               schema: {
-                type: "integer",
-                maximum: 1,
+                type: "string",
               },
-              description: "The Contact id",
+              description: "The Contact id (Mongo ObjectId)",
             },
           ],
           responses: {
@@ -250,11 +242,8 @@ export default {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/",
+                    $ref: "#/components/schemas/ErrorBadRequestResponse",
                   },
-                },
-                example: {
-                  message: "Id is not valid",
                 },
               },
             },
@@ -267,7 +256,9 @@ export default {
                       {
                         $ref: "#/components/schemas/ErrorUnauthorizedResponse",
                       },
-                      { $ref: "#/components/schemas/ErrorAuthJWTExpired" },
+                      {
+                        $ref: "#/components/schemas/ErrorAuthJWTExpiredResponse",
+                      },
                     ],
                   },
                   examples: {
@@ -297,13 +288,10 @@ export default {
                     $ref: "#/components/schemas/ErrorNotFoundResponse",
                   },
                 },
-                example: {
-                  message: "Not found resource",
-                },
               },
             },
             "500": {
-              description: "Unexpected error",
+              description: "Server error",
               content: {
                 "application/json": {
                   schema: {
@@ -318,14 +306,15 @@ export default {
           tags: ["Contacts"],
           summary: "Delete contact",
           description: "Delete contact",
+          security: [{ bearerAuth: [] }],
           parameters: [
             {
               in: "path",
               name: "contactId",
               required: true,
               schema: {
-                type: "integer",
-                maximum: 1,
+                type: "string",
+                pattern: "^[a-fA-F0-9]{24}$",
               },
               description: "The Contact id",
             },
@@ -353,11 +342,8 @@ export default {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorBadRequest",
+                    $ref: "#/components/schemas/ErrorBadRequestResponse",
                   },
-                },
-                example: {
-                  message: "Invalid id",
                 },
               },
             },
@@ -370,7 +356,9 @@ export default {
                       {
                         $ref: "#/components/schemas/ErrorUnauthorizedResponse",
                       },
-                      { $ref: "#/components/schemas/ErrorAuthJWTExpired" },
+                      {
+                        $ref: "#/components/schemas/ErrorAuthJWTExpiredResponse",
+                      },
                     ],
                   },
                   examples: {
@@ -400,13 +388,10 @@ export default {
                     $ref: "#/components/schemas/ErrorNotFoundResponse",
                   },
                 },
-                example: {
-                  message: "Not found resource",
-                },
               },
             },
             "500": {
-              description: "Unexpected error",
+              description: "Server error",
               content: {
                 "application/json": {
                   schema: {
@@ -418,54 +403,273 @@ export default {
           },
         },
       },
-      "/api/contacts/:contactId/favorite": {
+      "/api/contacts/{contactId}/favorite": {
         patch: {
+          tags: ["Contacts"],
+          summary: "Update contact",
+          security: [{ bearerAuth: [] }],
           parameters: [
             {
               in: "path",
               name: "contactId",
               required: true,
               schema: {
-                type: "integer",
-                maximum: 1,
+                type: "string",
               },
               description: "The Contact id",
             },
           ],
-          tags: ["Contacts"],
-          summary: "Update contact",
         },
       },
       "/signup": {
         post: {
           tags: ["Auth"],
           summary: "Signup user",
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            description: "Signup user",
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#components/schemas/SignUpRequest",
+                },
+              },
+            },
+          },
+          responses: {
+            "201": {
+              description: "User info",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/SignUpResponse",
+                  },
+                },
+              },
+            },
+            "400": {
+              description: "Bad request",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/ErrorBadRequestResponse",
+                  },
+                },
+              },
+            },
+            "404": {
+              description: "Not found",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/ErrorNotFoundResponse",
+                  },
+                },
+              },
+            },
+            "409": {
+              description: "Conflict",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/ErrorConflictResponse",
+                  },
+                },
+              },
+            },
+            "500": {
+              description: "Server error",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/GeneralServerErrorResponse",
+                  },
+                },
+              },
+            },
+          },
         },
       },
-
       "/signin": {
         post: {
           tags: ["Auth"],
           summary: "Signin user",
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            description: "Signin user",
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/SignInRequest",
+                },
+              },
+            },
+          },
+          responses: {
+            "201": {
+              description: "User info",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/SignInResponse",
+                  },
+                },
+              },
+            },
+            "400": {
+              description: "Bad request",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/ErrorBadRequestResponse",
+                  },
+                },
+              },
+            },
+            "401": {
+              description: "Unauthorized",
+              content: {
+                "application/json": {
+                  schema: {
+                    oneOf: [
+                      {
+                        $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                      },
+                      {
+                        $ref: "#/components/schemas/ErrorAuthJWTExpiredResponse",
+                      },
+                      {
+                        $ref: "#/components/schemas/ErrorAuthVerifyResponse",
+                      },
+                    ],
+                  },
+                  examples: {
+                    NotAuthorized: {
+                      summary: "Missing/invalid token",
+                      value: {
+                        status: 401,
+                        message: "Not Authorized",
+                      },
+                    },
+                    JWTExpired: {
+                      summary: "Expired token",
+                      value: {
+                        status: 401,
+                        message: "JWT Expired",
+                      },
+                    },
+                    ErrorVerify: {
+                      summary: "Email is not verify",
+                      value: {
+                        status: 401,
+                        message: "Email is not verify",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            "500": {
+              description: "Server error",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/GeneralServerErrorResponse",
+                  },
+                },
+              },
+            },
+          },
         },
       },
       "/signout": {
         get: {
           tags: ["Auth"],
           summary: "Signout user",
+          security: [{ bearerAuth: [] }],
+          description: "SignOut user",
+
+          responses: {
+            "204": {
+              description: "SignOut success",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/SingOutResponse",
+                  },
+                },
+              },
+            },
+            "401": {
+              description: "Unauthorized",
+              content: {
+                "application/json": {
+                  schema: {
+                    oneOf: [
+                      {
+                        $ref: "#/components/schemas/ErrorUnauthorizedResponse",
+                      },
+                      {
+                        $ref: "#/components/schemas/ErrorAuthJWTExpiredResponse",
+                      },
+                      {
+                        $ref: "#/components/schemas/ErrorAuthVerifyResponse",
+                      },
+                    ],
+                  },
+                  examples: {
+                    NotAuthorized: {
+                      summary: "Missing/invalid token",
+                      value: {
+                        status: 401,
+                        message: "Not Authorized",
+                      },
+                    },
+                    JWTExpired: {
+                      summary: "Expired token",
+                      value: {
+                        status: 401,
+                        message: "JWT Expired",
+                      },
+                    },
+                    ErrorVerify: {
+                      summary: "Email is not verify",
+                      value: {
+                        status: 401,
+                        message: "Email is not verify",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            "500": {
+              description: "Server error",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/GeneralServerErrorResponse",
+                  },
+                },
+              },
+            },
+          },
         },
       },
-      "/verify/:verificationToken": {
+      "/verify/{verificationToken}": {
         get: {
           tags: ["Auth"],
+          security: [{ bearerAuth: [] }],
           parameters: [
             {
               in: "path",
               name: "verificationToken",
               required: true,
               schema: {
-                type: "integer",
-                maximum: 1,
+                type: "string",
+                format: "uuid",
               },
               description: "Token for verify",
             },
@@ -477,6 +681,7 @@ export default {
         get: {
           tags: ["Auth"],
           summary: "Repead user verify",
+          security: [{ bearerAuth: [] }],
         },
       },
       "/avatars": {
@@ -484,6 +689,7 @@ export default {
           tags: ["Auth"],
           summary: "Update user avatar",
           description: "Update user avatar",
+          security: [{ bearerAuth: [] }],
         },
       },
 
@@ -491,6 +697,7 @@ export default {
         get: {
           tags: ["Auth"],
           summary: "Get current user",
+          security: [{ bearerAuth: [] }],
         },
       },
     },
@@ -503,6 +710,95 @@ export default {
         },
       },
       schemas: {
+        SignUpRequest: {
+          type: "object",
+          required: ["username", "email", "password"],
+          properties: {
+            username: {
+              type: String,
+              description: "Users name",
+            },
+            email: {
+              type: "string",
+              pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+              description: "Users email",
+            },
+            password: {
+              type: "string",
+              description: "Users password",
+            },
+          },
+        },
+        SignInRequest: {
+          type: "object",
+          required: ["email", "password"],
+          properties: {
+            email: {
+              type: "string",
+              pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+              description: "Users email",
+            },
+            password: {
+              type: "string",
+              description: "Users password",
+            },
+          },
+        },
+        SignInResponse: {
+          type: "object",
+          properties: {
+            token: {
+              type: "string",
+              description: "Users  token",
+            },
+            user: {
+              type: "object",
+              properties: {
+                email: {
+                  type: "string",
+                  pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                  description: "Users email",
+                },
+                subscription: {
+                  type: "string",
+                  default: "starter",
+                  enum: ["starter", "pro", "business"],
+                  description: "Users subscription",
+                },
+              },
+            },
+          },
+        },
+        SignUpResponse: {
+          type: "object",
+          properties: {
+            user: {
+              type: "object",
+              properties: {
+                email: {
+                  type: "string",
+                  description: "Users email",
+                },
+                subscription: {
+                  type: "string",
+                  default: "starter",
+                  enum: ["starter", "pro", "business"],
+                  description: "Users subscription",
+                },
+              },
+            },
+          },
+        },
+        SingOutResponse: {
+          type: "object",
+          properties: {
+            status: {
+              type: "integer",
+              description: "SignOut success",
+              example: 204,
+            },
+          },
+        },
         CreateContactRequest: {
           type: "object",
           required: ["name", "email", "phone", "avatar"],
@@ -514,7 +810,7 @@ export default {
             email: {
               type: "string",
               description: "Contact`s email",
-              format: "email",
+              pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
             },
             phone: {
               type: "number",
@@ -741,13 +1037,13 @@ export default {
             example: "The contact you are trying to delete is not exist",
           },
         },
-        ErrorBadRequest: {
+        ErrorBadRequestResponse: {
           type: "object",
           properties: {
             status: {
               type: "integer",
-              description: "400",
-              example: "Error status code",
+              description: "Error status code",
+              example: "400",
             },
 
             message: {
@@ -757,18 +1053,33 @@ export default {
             },
           },
         },
-        ErrorAuthJWTExpired: {
+        ErrorAuthJWTExpiredResponse: {
           type: "object",
           properties: {
             status: {
               type: "string",
-              description: "401",
-              example: "Unauthorized",
+              description: "Unauthorized",
+              example: "401",
             },
             message: {
               type: "string",
               description: "JWT expired",
               example: "JWT expired",
+            },
+          },
+        },
+        ErrorAuthVerifyResponse: {
+          type: "object",
+          properties: {
+            status: {
+              type: "string",
+              description: "Unauthorized",
+              example: "401",
+            },
+            message: {
+              type: "string",
+              description: "Your email wasn't verified",
+              example: "Your email wasn't verified",
             },
           },
         },

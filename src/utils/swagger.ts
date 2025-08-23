@@ -1,6 +1,6 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import type { Express } from "express";
+import { Express } from "express";
 import { log } from "./logger";
 import options from "../openapi";
 
@@ -26,7 +26,9 @@ export const swaggerDocs = (app: Express, port: string | 3000) => {
 
   log.info(
     `Docs available at ${
-      app.get("env") === "development" && `http://localhost:${port}/api-docs`
+      app.get("env") !== "development"
+        ? `http://localhost:${port}/api-docs`
+        : process.env.BASE_URL + "/api-docs"
     } `
   );
 };

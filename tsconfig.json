@@ -20,9 +20,10 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "paths": {
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "middlewares/*": ["middlewares/*"]
     }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

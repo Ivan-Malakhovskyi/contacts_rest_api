@@ -122,7 +122,7 @@ const signin = async (req: Request, res: Response) => {
   };
 
   const token = jsonwebtoken.sign(payload, JWT_SECRET_KEY!, {
-    expiresIn: "24h",
+    expiresIn: "7d",
   });
 
   await User.findByIdAndUpdate(user._id, { token });

@@ -8,7 +8,6 @@ mongoose
   .connect(DB_HOST!)
   .then(() => {
     console.log("✔ Success conecting");
-
     app.listen(PORT, () => {
       log.info(`Server running. Use our API on port: ${PORT}`);
     });
