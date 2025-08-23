@@ -5,7 +5,7 @@ import "dotenv/config"; //! скорочений запис
 import contactsRouter from "./routes/api/contacts-router";
 import authRouter from "./routes/api/auth-contacts-router";
 import { swaggerDocs } from "./utils/swagger";
-import healthRouter from "routes/api/health";
+import healthRouter from "./routes/api/health";
 
 export const app = express(); //* web-server
 
@@ -18,7 +18,7 @@ app.use(express.static("public"));
 
 app.use("/api/contacts", contactsRouter);
 app.use("/api/auth", authRouter);
-app.use("/health", healthRouter);
+app.use("/api/health", healthRouter);
 swaggerDocs(app, "3000");
 
 app.use((req, res) => {
